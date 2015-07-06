@@ -1,0 +1,28 @@
+{
+  "name": "rangerjs",
+  "version": "1.0.0",
+  "description": "Vanilla JS Range Slider",
+  "main": "src/scripts/index.js",
+  "scripts": {
+    "start": "webpack && npm run dev",
+    "dev": "webpack-dev-server --devtool eval --hot --progress",
+    "production": "webpack -p"
+  },
+  "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>",
+  "dependencies": {
+    "autoprefixer-loader": "^2.0.0",
+    "babel-core": "^5.6.15",
+    "babel-loader": "^5.2.2",
+    "css-loader": "^0.15.1",
+    "extract-text-webpack-plugin": "^0.8.2",
+    "file-loader": "^0.8.4",
+    "html-loader": "^0.3.0",
+    "less": "^2.5.1",
+    "less-loader": "^2.2.0",
+    "node-libs-browser": "^0.5.2",
+    "style-loader": "^0.12.3",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.10.1",
+    "webpack-dev-server": "^1.10.1"
+  }
+}
