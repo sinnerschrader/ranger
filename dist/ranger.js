@@ -121,15 +121,16 @@
 
 	//-- This file exists to compile all css - less - into one file
 	//-- It is removed from the js file on compilation.
+	// require('../styles/index.less');
 	'use strict';
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _sliderJs = __webpack_require__(4);
+	__webpack_require__(4);
+
+	var _sliderJs = __webpack_require__(8);
 
 	var _sliderJs2 = _interopRequireDefault(_sliderJs);
-
-	__webpack_require__(5);
 
 	var test = function test() {
 	  return 'hello';
@@ -138,6 +139,15 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -170,12 +180,6 @@
 
 	exports['default'] = Point;
 	module.exports = exports['default'];
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

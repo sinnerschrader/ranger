@@ -1,3 +1,5 @@
+dist/ranger.css
+dist/ranger.js
 node_modules/
 examples/
 .git
