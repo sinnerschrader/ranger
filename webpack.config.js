@@ -4,39 +4,42 @@ var path                = require('path');
 var ExtractTextPlugin   = require("extract-text-webpack-plugin");
 
 //-- Configuration Settings
-var scriptEntry   = './src/scripts/index.js';
-var stylesEntry   = './src/styles/styles.js';
-var serverEntry   = 'webpack/hot/dev-server';
-var outputPath    = __dirname + '/dist';
-var scriptsPath   = path.join(__dirname, 'src/scripts');
-var scriptsLoader = 'babel-loader?experimental';
+var nameSpace           = 'ranger';
+var outputPath          = __dirname + '/dist';
+var scriptEntry         = './src/scripts/index.js';
+var serverEntry         = 'webpack/hot/dev-server';
+var excludeJs           = /node_modules/;
+var scriptsPath         = path.join(__dirname, 'src/scripts');
+var scriptsLoader       = 'babel-loader?experimental';
+var autoprefix          = '{browsers:["last 2 version", "Explorer >= 9"]}';
+var cssLoader           = ['css-loader', 'autoprefixer-loader?' + autoprefix];
+var lessLoader          = cssLoader.slice(0);
+    lessLoader.push('less-loader');
 
+//-- Webpack Configuration
 module.exports = {
     entry: {
-        scripts: ['webpack/hot/dev-server', scriptEntry]
-        // styles: stylesEntry
+        scripts: [serverEntry, scriptEntry]
     },
     output: {
        path: outputPath,
-       filename: 'ranger.js'
+       filename: nameSpace + '.js'
    },
    module: {
        loaders: [
             {
                  test: scriptsPath,
-                 exclude: /node_modules/,
+                 exclude: excludeJs,
                  loader: scriptsLoader
             },
             {
                 test: /\.less$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader?{browsers:["last 2 version", "Explorer >= 9"]}',
-                'less-loader')
+                loader: ExtractTextPlugin.extract('style-loader', lessLoader.join('!'))
             }
        ]
    },
    plugins: [
-       new ExtractTextPlugin('ranger.css')
-    //    new webpack.optimize.CommonsChunkPlugin('styles', 'styles.js', Infinity)
+       new ExtractTextPlugin(nameSpace + '.css')
    ],
    devServer: {
         contentBase: outputPath,

@@ -44,12 +44,13 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
-	module.exports = __webpack_require__(2);
+	__webpack_require__(2);
+	module.exports = __webpack_require__(3);
 
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -115,7 +116,7 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//-- This file exists to compile all css - less - into one file
@@ -124,11 +125,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _sliderJs = __webpack_require__(3);
+	var _sliderJs = __webpack_require__(4);
 
 	var _sliderJs2 = _interopRequireDefault(_sliderJs);
 
-	__webpack_require__(4);
+	__webpack_require__(5);
 
 	var test = function test() {
 	  return 'hello';
@@ -136,7 +137,7 @@
 	console.log(test, 'but now is working real real fine');
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -171,7 +172,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
