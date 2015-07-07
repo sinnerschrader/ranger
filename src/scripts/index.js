@@ -5,5 +5,3 @@ import '../styles/index.less';
 
 //-- Slider Dependencies
 import Point from './slider.js';
-let test = () => 'hello';
-console.log(test, 'but now is working real real fine');

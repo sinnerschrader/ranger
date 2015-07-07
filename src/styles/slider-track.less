@@ -1,0 +1,71 @@
+@minTrackWidth      : 150px;
+@maxTrackWidth      : 300px;
+@trackHeight        : 4px;
+@trackHexBg         : #FFEDCB;
+@trackHexActiveBg   : #E8DCB9;
+@handleSize         : (@trackHeight * 4);
+@activeHandle       : (@handleSize * 2);
+@handleHexBg        : @trackHexActiveBg;
+@trackTransitions   : .5s cubic-bezier(.550, .085, .680, .530);
+
+.Slider-track {
+    box-sizing: border-box;
+    display: inline-block;
+    height: @trackHeight;
+    width: 30vw;
+    min-width: @minTrackWidth;
+    margin: 0 (@activeHandle / 2);
+    background-color: @trackHexBg;
+    cursor: pointer;
+}
+
+.Slider-distance {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    background-color: @trackHexActiveBg;
+    transform: translateX(-100%);
+}
+
+.Slider-handle {
+    position: absolute;
+    bottom: 50%;
+    right: -(@handleSize / 2);
+    z-index: 1;
+    height: @handleSize;
+    width: @handleSize;
+    border-radius: 50%;
+    background-color: @handleHexBg;
+    transform: translateY(50%) scale(1);
+    transition: transform @trackTransitions;
+
+    .is-active & {
+        transform: translateY(50%) scale(1.5);
+
+        &::before {
+            content: none;
+        }
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: @activeHandle;
+        width: @activeHandle;
+        border-radius: inherit;
+        background-color: currentColor;
+        opacity: .06;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform @trackTransitions;
+    }
+
+    &:hover {
+        &::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+}

@@ -1,3 +1,12 @@
-body {
-    background-color: yellow;
+@baseSpacing        : 20px;
+@sliderHeight       : (@baseSpacing * 2);
+
+.Slider {
+    box-sizing: border-box;
+    height: @sliderHeight;
+    // padding-top: (@baseSpacing  * 2);
+    margin: @baseSpacing;
+    line-height: @sliderHeight;
+    overflow-x: hidden;
+    user-select: none;
 }
