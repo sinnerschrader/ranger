@@ -1,5 +1,4 @@
 @minTrackWidth      : 150px;
-@maxTrackWidth      : 300px;
 @trackHeight        : 4px;
 @trackHexBg         : #FFEDCB;
 @trackHexActiveBg   : #E8DCB9;
@@ -23,10 +22,9 @@
     position: relative;
     left: 0;
     bottom: 0;
-    width: inherit;
+    width: 0%;
     height: inherit;
     background-color: @trackHexActiveBg;
-    transform: translateX(-100%);
 }
 
 .Slider-handle {
@@ -54,6 +52,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        // z-index: -1;
         height: @activeHandle;
         width: @activeHandle;
         border-radius: inherit;
