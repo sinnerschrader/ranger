@@ -1,4 +1,4 @@
-import {handleDistance} from './utilities/movement';
+import {handlePosition} from './utilities/movement';
 
 export default function() {
     let sliderNodeList      = document.getElementsByClassName('js-ranger');
@@ -15,12 +15,15 @@ export default function() {
 
     let sliderList      = Array.prototype.slice.call(sliderNodeList);
 
+
     //-- Ranger helper to get required calculation settings
     let ranger = {
         isActive: false,
         offset: 0,
         dimensions: 0,
+        clientRectLeft: 0,
         min(node) {
+            console.log(this);
             return parseInt(node.getAttribute('data-min'), 10);
         },
         max(node) {
@@ -65,23 +68,29 @@ export default function() {
         slider.addEventListener('mousedown', e => {
             e.preventDefault();
 
-            ranger.isActive   = true;
-            ranger.dimensions = trackEl.getBoundingClientRect();
-            let clientRectLeft    = ranger.dimensions.left;
-            ranger.offset     = e.pageX - clientRectLeft;
+            ranger.isActive       = true;
+            ranger.dimensions     = trackEl.getBoundingClientRect();
+            ranger.clientRectLeft = ranger.dimensions.left;
+            ranger.offset         = e.pageX - ranger.clientRectLeft;
 
             if (!slider.classList.contains('is-active')) {
                 slider.classList.add('is-active');
             }
 
-            distanceEl.style.width =  handleDistance(ranger.offset, ranger.dimensions.width) + '%';
-            console.log(distanceEl.style.width);
+            distanceEl.style.width =  handlePosition(ranger.offset, ranger.dimensions.width) + '%';
+
         });
+
+        console.log(ranger.offset);
 
         slider.addEventListener('mousemove', e => {
             if (ranger.isActive) {
                 e.preventDefault();
-
+                ranger.dimensions     = trackEl.getBoundingClientRect();
+                ranger.clientRectLeft = ranger.dimensions.left;
+                ranger.offset         = e.pageX - ranger.clientRectLeft;
+                distanceEl.style.width =  handlePosition(ranger.offset, ranger.dimensions.width) + '%';
+                console.log(distanceEl.style.width);
             }
         });
 
