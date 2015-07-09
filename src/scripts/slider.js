@@ -1,4 +1,5 @@
 import {handlePosition} from './utilities/movement';
+import {handleValue} from './utilities/data';
 
 export default function() {
     let sliderNodeList      = document.getElementsByClassName('js-ranger');
@@ -15,13 +16,14 @@ export default function() {
 
     let sliderList      = Array.prototype.slice.call(sliderNodeList);
 
-
     //-- Ranger helper to get required calculation settings
     let ranger = {
         isActive: false,
         offset: 0,
         dimensions: 0,
         clientRectLeft: 0,
+        currentPosition: 0,
+        currentValue: null,
         min(node) {
             console.log(this);
             return parseInt(node.getAttribute('data-min'), 10);
@@ -58,39 +60,37 @@ export default function() {
     }
 
     sliderList.forEach((slider, i, array) => {
-        let inputEl    = slider.querySelector('.js-ranger-input');
-        let trackEl    = slider.querySelector('.js-ranger-track');
-        let distanceEl = slider.querySelector('.js-ranger-distance');
-        let minVal     = ranger.min(inputEl);
-        let maxVal     = ranger.max(inputEl);
-        // let value      = ranger.value(inputEl);
+        let inputEl           = slider.querySelector('.js-ranger-input');
+        let trackEl           = slider.querySelector('.js-ranger-track');
+        let distanceEl        = slider.querySelector('.js-ranger-distance');
+        let valueEl           = slider.querySelector('.js-ranger-value');
+        let minVal            = ranger.min(inputEl);
+        let maxVal            = ranger.max(inputEl);
+        let value             = ranger.value(inputEl);
+        ranger.dimensions     = trackEl.getBoundingClientRect();
+        ranger.clientRectLeft = ranger.dimensions.left;
 
         slider.addEventListener('mousedown', e => {
             e.preventDefault();
-
-            ranger.isActive       = true;
-            ranger.dimensions     = trackEl.getBoundingClientRect();
-            ranger.clientRectLeft = ranger.dimensions.left;
-            ranger.offset         = e.pageX - ranger.clientRectLeft;
-
             if (!slider.classList.contains('is-active')) {
                 slider.classList.add('is-active');
             }
 
-            distanceEl.style.width =  handlePosition(ranger.offset, ranger.dimensions.width) + '%';
+            ranger.offset         = e.pageX - ranger.clientRectLeft;
+            ranger.isActive       = true;
+            ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
 
+            distanceEl.style.width =  ranger.currentPosition + '%';
+            // valueEl.innerHTML = handleValue(minVal, maxVal, ranger.currentPosition);
+            console.log(handleValue(minVal, maxVal, ranger.currentPosition), 'current value');
         });
-
-        console.log(ranger.offset);
 
         slider.addEventListener('mousemove', e => {
             if (ranger.isActive) {
                 e.preventDefault();
-                ranger.dimensions     = trackEl.getBoundingClientRect();
-                ranger.clientRectLeft = ranger.dimensions.left;
                 ranger.offset         = e.pageX - ranger.clientRectLeft;
-                distanceEl.style.width =  handlePosition(ranger.offset, ranger.dimensions.width) + '%';
-                console.log(distanceEl.style.width);
+                ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width)
+                distanceEl.style.width =  ranger.currentPosition + '%';
             }
         });
 
@@ -101,7 +101,6 @@ export default function() {
                 }
                 ranger.isActive = false;
             }
-
         });
     });
 

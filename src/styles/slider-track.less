@@ -16,6 +16,14 @@
     margin: 0 (@activeHandle / 2);
     background-color: @trackHexBg;
     cursor: pointer;
+
+    &:hover {
+        .Slider-handle {
+            &::before {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    }
 }
 
 .Slider-distance {
@@ -60,11 +68,5 @@
         opacity: .06;
         transform: translate(-50%, -50%) scale(0);
         transition: transform @trackTransitions;
-    }
-
-    &:hover {
-        &::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
     }
 }
