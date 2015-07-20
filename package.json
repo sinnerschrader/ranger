@@ -9,6 +9,7 @@
     "production": "webpack -p"
   },
   "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>",
+  "repository": "git@git.sinnerschrader.com:frontend/rangerjs.git",
   "dependencies": {
     "autoprefixer-loader": "^2.0.0",
     "babel-core": "^5.6.15",
@@ -19,7 +20,7 @@
     "html-loader": "^0.3.0",
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
-    "lodash": "^3.10.0",
+    "lodash.debounce": "^3.1.1",
     "node-libs-browser": "^0.5.2",
     "style-loader": "^0.12.3",
     "url-loader": "^0.5.6",

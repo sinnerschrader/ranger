@@ -1,49 +1,23 @@
 'use strict';
 
-export function handlePosition (offset, width) {
-    let min      = 0;
-    let max      = 100;
-    let maxRange = (max - min);
-    let position = (offset / width * maxRange + min);
-
-    if (position <= min) {
-        return min;
-    }
-
-    if (position >= max) {
-        return max;
-    }
-
-    return position;
- }
-
-// export function handlePosition (offset, width, min, max, value) {
-//     let min      = 0;
-//     let max      = 100;
-//     let maxRange = (max - min);
-//     let position = (offset / width * maxRange + min);
-//
-//     if (position <= min) {
-//         return min;
-//     }
-//
-//     if (position >= max) {
-//         return max;
-//     }
-//
-//     return position;
-//  }
+//-- Returns a function, that, as long as it continues to be invoked, will not
+//-- be triggered. The function will be called after it stops being called for
+//-- N milliseconds. If `immediate` is passed, trigger the function on the
+//-- leading edge, instead of the trailing.
+//-- http://davidwalsh.name/essential-javascript-functions?utm_source=javascriptweekly&utm_medium=email
 
 
-export function handleValue(min, max, percentage) {
-    let maxRange = max - min;
-    return ((percentage * maxRange) / 100) + min ;
-}
-
-export function setValueInDom(el, value) {
-    return el.innerHTML = value;
-}
-
-export function setAttributeInDom(el, attr, value) {
-    return el.setAttribute(attr, value);
-}
+export function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};

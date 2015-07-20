@@ -1,8 +1,9 @@
-import _ from 'lodash';
-import {handlePosition} from './utilities/utils';
-import {handleValue} from './utilities/utils';
-import {setValueInDom} from './utilities/utils';
-import {setAttributeInDom} from './utilities/utils';
+// import _ from 'lodash';
+import debounce from 'lodash.debounce';
+import {handlePosition} from './utilities/move';
+import {handleValue} from './utilities/data';
+import {setValueInDom} from './utilities/data';
+import {setAttributeInDom} from './utilities/data';
 
 export default function() {
     let sliderNodeList      = document.getElementsByClassName('js-ranger');
@@ -19,8 +20,8 @@ export default function() {
     let sliderList           = Array.prototype.slice.call(sliderNodeList);
 
     //-- Debouece helpers
-    let _debouncedSetValueInDom     = _.debounce(setValueInDom, 20);
-    let _debouncedSetAttributeInDom = _.debounce(setAttributeInDom, 40);
+    let _debouncedSetValueInDom     = debounce(setValueInDom, 20);
+    let _debouncedSetAttributeInDom = debounce(setAttributeInDom, 40);
 
     //-- Ranger helper to get required calculation settings
     let ranger = {
@@ -119,7 +120,7 @@ export default function() {
             }
         }
 
-        slider.addEventListener('mousemove', _.debounce(handleMouseMove, 10));
+        slider.addEventListener('mousemove', debounce(handleMouseMove, 10));
         slider.removeEventListener('mousemove', handleMouseMove, true);
 
         let handleMouseUp = e => {
