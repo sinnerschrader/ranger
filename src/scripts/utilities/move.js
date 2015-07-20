@@ -1,5 +1,12 @@
 'use strict';
 
+export function setInitialPosition (min, max, initValue) {
+    let range     = (max - min);
+    let percent   = Math.round(((initValue - min) * 100) / range);
+
+    return percent;
+}
+
 export function handlePosition (offset, width) {
     let min      = 0;
     let max      = 100;
@@ -14,7 +21,7 @@ export function handlePosition (offset, width) {
      let ratio      = Math.min(Math.max(offset / width, 0), 1);
      let range      = (max - min);
      let currentStep= Math.round((ratio * range) / stepWidth);
-     let percent   = ((currentStep * stepWidth) / range) * 100;
+     let percent    = ((currentStep * stepWidth) / range) * 100;
 
      return percent;
  }

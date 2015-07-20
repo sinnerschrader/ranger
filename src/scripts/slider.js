@@ -1,6 +1,6 @@
 import debounce from 'lodash.debounce';
 import {getMin, getMax, getSteps, getValue, pauseEvent} from './utilities/utils';
-import {handlePosition, handlePositionSteps} from './utilities/move';
+import {handlePosition, handlePositionSteps, setInitialPosition} from './utilities/move';
 import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data';
 
 export default function() {
@@ -44,6 +44,15 @@ export default function() {
         ranger.dimensions     = trackEl.getBoundingClientRect();
         ranger.clientRectLeft = ranger.dimensions.left;
 
+        //-- Initialize the slider
+        let init = () => {
+            if (indicatorEL !== null) {
+                setValueInDom(valueEl, value);
+            }
+            distanceEl.style.width= setInitialPosition(minVal, maxVal, value)  + '%';
+        }
+        init();
+
         let handleMouseDown  = e => {
             pauseEvent(e);
             if (!slider.classList.contains ('is-active')) {
@@ -65,6 +74,7 @@ export default function() {
 
             //-- Calculates and sets the value of the specific slider
             ranger.currentValue   = handleValue(minVal, maxVal, ranger.currentPosition);
+
             setAttributeInDom(inputEl, 'value', ranger.currentValue);
 
             if (indicatorEL !== null) {
@@ -81,9 +91,6 @@ export default function() {
 
                 //-- Calculates and sets the new position of the slider
                 ranger.offset         = e.pageX - ranger.clientRectLeft;
-
-                //-- Verify if the slider has steps
-                //-- and set the position accordingly
                 if (!isNaN(steps)) {
                     ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, minVal, maxVal, steps);
                 } else {
