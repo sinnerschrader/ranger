@@ -1,9 +1,7 @@
 import debounce from 'lodash.debounce';
-import {handlePosition} from './utilities/move';
-import {handlePositionSteps} from './utilities/move';
-import {handleValue} from './utilities/data';
-import {setValueInDom} from './utilities/data';
-import {setAttributeInDom} from './utilities/data';
+import {getMin, getMax, getSteps, getValue, pauseEvent} from './utilities/utils';
+import {handlePosition, handlePositionSteps} from './utilities/move';
+import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data';
 
 export default function() {
     let sliderNodeList      = document.getElementsByClassName('js-ranger');
@@ -23,46 +21,14 @@ export default function() {
     let _debouncedSetValueInDom     = debounce(setValueInDom, 20);
     let _debouncedSetAttributeInDom = debounce(setAttributeInDom, 40);
 
-    //-- Ranger helper to get required calculation settings
+    //-- Ranger Settings
     let ranger = {
         isActive: false,
         offset: 0,
         dimensions: 0,
         clientRectLeft: 0,
         currentPosition: 0,
-        currentValue: null,
-        min(node) {
-            return parseInt(node.getAttribute('data-min'), 10);
-        },
-        max(node) {
-            return parseInt(node.getAttribute('data-max'), 10);
-        },
-        steps(node) {
-            return parseInt(node.getAttribute('data-step'), 10);
-        },
-        value(node) {
-            return parseInt(node.getAttribute('value'), 10);
-        },
-        //-- Prevent text selection while dragging
-        pauseEvent(e) {
-            if (e.stopPropagation) {
-                 e.stopPropagation();
-            }
-            if (e.preventDefault) {
-                 e.preventDefault();
-            }
-
-            e.cancelBubble = true;
-            e.returnValue = false;
-
-            return false;
-        },
-        stopPropagation(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            e.cancelBubble = true;
-        }
+        currentValue: null
     }
 
     sliderList.forEach((slider, i, array) => {
@@ -71,16 +37,15 @@ export default function() {
         let distanceEl        = slider.querySelector('.js-ranger-distance');
         let valueEl           = slider.querySelector('.js-ranger-value');
         let indicatorEL       = slider.querySelector('.js-ranger-indicator');
-        let minVal            = ranger.min(inputEl);
-        let maxVal            = ranger.max(inputEl);
-        let value             = ranger.value(inputEl);
-        let steps             = ranger.steps(inputEl);
+        let minVal            = getMin(inputEl, 'data-min');
+        let maxVal            = getMax(inputEl, 'data-max');
+        let value             = getValue(inputEl, 'value');
+        let steps             = getSteps(inputEl, 'data-step');
         ranger.dimensions     = trackEl.getBoundingClientRect();
         ranger.clientRectLeft = ranger.dimensions.left;
 
-
         let handleMouseDown  = e => {
-            e.preventDefault();
+            pauseEvent(e);
             if (!slider.classList.contains ('is-active')) {
                 slider.classList.add ('is-active');
             }
@@ -112,7 +77,7 @@ export default function() {
 
         let handleMouseMove = e => {
             if (ranger.isActive) {
-                e.preventDefault();
+                pauseEvent(e);
 
                 //-- Calculates and sets the new position of the slider
                 ranger.offset         = e.pageX - ranger.clientRectLeft;
