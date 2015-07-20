@@ -1,6 +1,6 @@
-// import _ from 'lodash';
 import debounce from 'lodash.debounce';
 import {handlePosition} from './utilities/move';
+import {handlePositionSteps} from './utilities/move';
 import {handleValue} from './utilities/data';
 import {setValueInDom} from './utilities/data';
 import {setAttributeInDom} from './utilities/data';
@@ -32,14 +32,13 @@ export default function() {
         currentPosition: 0,
         currentValue: null,
         min(node) {
-            console.log(this);
             return parseInt(node.getAttribute('data-min'), 10);
         },
         max(node) {
             return parseInt(node.getAttribute('data-max'), 10);
         },
         steps(node) {
-            return parseInt(node.getAttribute('data-steps'), 10);
+            return parseInt(node.getAttribute('data-step'), 10);
         },
         value(node) {
             return parseInt(node.getAttribute('value'), 10);
@@ -75,8 +74,10 @@ export default function() {
         let minVal            = ranger.min(inputEl);
         let maxVal            = ranger.max(inputEl);
         let value             = ranger.value(inputEl);
+        let steps             = ranger.steps(inputEl);
         ranger.dimensions     = trackEl.getBoundingClientRect();
         ranger.clientRectLeft = ranger.dimensions.left;
+
 
         let handleMouseDown  = e => {
             e.preventDefault();
@@ -87,7 +88,14 @@ export default function() {
             //-- Calculates and sets the new position of the slider
             ranger.offset         = e.pageX - ranger.clientRectLeft;
             ranger.isActive       = true;
-            ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
+
+            //-- Verify if the slider has steps
+            //-- and set the position accordingly
+            if (!isNaN(steps)) {
+                ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, steps);
+            } else {
+                ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
+            }
             distanceEl.style.width=  ranger.currentPosition + '%';
 
             //-- Calculates and sets the value of the specific slider
@@ -105,9 +113,18 @@ export default function() {
         let handleMouseMove = e => {
             if (ranger.isActive) {
                 e.preventDefault();
+
                 //-- Calculates and sets the new position of the slider
                 ranger.offset         = e.pageX - ranger.clientRectLeft;
-                ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width)
+
+                //-- Verify if the slider has steps
+                //-- and set the position accordingly
+                if (!isNaN(steps)) {
+                    ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, steps);
+                    console.log(ranger.currentPosition, 'current position steps');
+                } else {
+                    ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
+                }
                 distanceEl.style.width =  ranger.currentPosition + '%';
 
                 //-- Calculates and sets the value of the specific slider
