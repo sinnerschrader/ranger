@@ -3,33 +3,18 @@
 export function handlePosition (offset, width) {
     let min      = 0;
     let max      = 100;
-    let maxRange = (max - min);
-    let position = Math.round((offset / width * maxRange + min));
+    let ratio    = Math.min(Math.max(offset / width, min), 1);
+    let range    = (max - min);
+    let percent = Math.round((ratio * range) + min);
 
-    if (position <= min) {
-        return min;
-    }
-
-    if (position >= max) {
-        return max;
-    }
-
-    return position;
+    return percent;
  }
 
- export function handlePositionSteps (offset, width, steps) {
-     let min      = 0;
-     let max      = 100;
-     let maxRange = (max - min);
-     let position = Math.round(((offset / width * maxRange + min) / steps)) * steps;
+ export function handlePositionSteps (offset, width, min, max, stepWidth) {
+     let ratio      = Math.min(Math.max(offset / width, 0), 1);
+     let range      = (max - min);
+     let currentStep= Math.round((ratio * range) / stepWidth);
+     let percent   = ((currentStep * stepWidth) / range) * 100;
 
-     if (position <= min) {
-         return min;
-     }
-
-     if (position >= max) {
-         return max;
-     }
-
-     return position;
+     return percent;
  }

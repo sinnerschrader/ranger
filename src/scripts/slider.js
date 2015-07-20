@@ -57,7 +57,7 @@ export default function() {
             //-- Verify if the slider has steps
             //-- and set the position accordingly
             if (!isNaN(steps)) {
-                ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, steps);
+                ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, minVal, maxVal, steps);
             } else {
                 ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
             }
@@ -85,8 +85,7 @@ export default function() {
                 //-- Verify if the slider has steps
                 //-- and set the position accordingly
                 if (!isNaN(steps)) {
-                    ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, steps);
-                    console.log(ranger.currentPosition, 'current position steps');
+                    ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, minVal, maxVal, steps);
                 } else {
                     ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
                 }
