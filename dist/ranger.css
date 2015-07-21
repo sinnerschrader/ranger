@@ -2,9 +2,9 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
   -webkit-align-content: center;
       -ms-flex-line-pack: center;
           align-content: center;
@@ -14,7 +14,7 @@
   height: 100vh;
   width: 100vw;
   margin: auto;
-  background-color: #fff9d8;
+  background-color: magenta;
 }
 .Showcase .Slider {
   -webkit-align-self: center;

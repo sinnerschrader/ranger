@@ -19,7 +19,7 @@ var lessLoader          = cssLoader.slice(0);
 //-- Webpack Configuration
 module.exports = {
     entry: {
-        scripts: [scriptEntry]
+        scripts: [serverEntry, scriptEntry]
     },
     output: {
        path: outputPath,
@@ -40,5 +40,12 @@ module.exports = {
    },
    plugins: [
        new ExtractTextPlugin(nameSpace + '.css')
-   ]
+   ],
+    devServer: {
+        contentBase: outputPath,
+        noInfo: false,
+        hot: true,
+        inline: true,
+        stats: { colors: true }
+    }
 }

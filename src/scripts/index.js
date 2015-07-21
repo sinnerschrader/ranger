@@ -9,4 +9,3 @@ import '../styles/index.less';
 import createSlider from './slider';
 
 const RANGER = createSlider();
-console.log(RANGER);
