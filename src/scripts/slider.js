@@ -1,5 +1,4 @@
-import debounce from 'lodash.debounce';
-import {getMin, getMax, getSteps, getValue, pauseEvent} from './utilities/utils';
+import {getMin, getMax, getSteps, getValue, pauseEvent, debounce} from './utilities/utils';
 import {handlePosition, handlePositionSteps, setInitialPosition} from './utilities/move';
 import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data';
 
@@ -19,8 +18,8 @@ export default function() {
     let sliderList           = Array.prototype.slice.call(sliderNodeList);
 
     //-- Debounce helpers
-    let _debouncedSetValueInDom     = debounce(setValueInDom, 20);
-    let _debouncedSetAttributeInDom = debounce(setAttributeInDom, 40);
+    let setDebouncedValue           = debounce(setValueInDom, 20);
+    let setDebouncedAttr            = debounce(setAttributeInDom, 40);
 
     sliderList.forEach((slider, i, array) => {
 
@@ -47,6 +46,7 @@ export default function() {
 
             if (indicatorEL !== null) {
                 setValueInDom(valueEl, ranger.value);
+                indicatorEL.style.left = setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
             }
 
             distanceEl.style.width= setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
@@ -55,6 +55,7 @@ export default function() {
         init();
 
         let handleMouseDown  = e => {
+
             pauseEvent(e);
             if (!slider.classList.contains ('is-active')) {
                 slider.classList.add ('is-active');
@@ -67,8 +68,11 @@ export default function() {
             //-- Verify if the slider has steps
             //-- and set the position accordingly
             if (!isNaN(ranger.steps)) {
+
                 ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
+
             } else {
+
                 ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
             }
 
@@ -76,11 +80,11 @@ export default function() {
 
             //-- Calculates and sets the value of the specific slider
             ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
-
             setAttributeInDom(inputEl, 'value', ranger.currentValue);
 
             if (indicatorEL !== null) {
                 setValueInDom(valueEl, ranger.currentValue);
+                indicatorEL.style.left = ranger.currentPosition + '%';
             }
         };
 
@@ -94,26 +98,31 @@ export default function() {
                 //-- Calculates and sets the new position of the slider
                 ranger.offset         = e.pageX - ranger.dimensions.left;
 
-
                 if (!isNaN(ranger.steps)) {
+
                     ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
+
                 } else {
+
                     ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
                 }
                 distanceEl.style.width =  ranger.currentPosition + '%';
 
                 //-- Calculates and sets the value of the specific slider
                 ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
-                _debouncedSetAttributeInDom(inputEl, 'value', ranger.currentValue);
+                setDebouncedAttr(inputEl, 'value', ranger.currentValue);
 
                 if (indicatorEL !== null) {
-                    _debouncedSetValueInDom(valueEl, ranger.currentValue);
+                    setDebouncedValue(valueEl, ranger.currentValue);
+                    indicatorEL.style.left = ranger.currentPosition + '%';
                 }
             }
+
+            return;
         }
 
-        slider.addEventListener('mousemove', debounce(handleMouseMove, 10));
-        slider.removeEventListener('mousemove', handleMouseMove, true);
+        window.addEventListener('mousemove', debounce(handleMouseMove, 10));
+        window.removeEventListener('mousemove', handleMouseMove, true);
 
         let handleMouseUp = e => {
 
@@ -125,6 +134,8 @@ export default function() {
 
                 ranger.isActive = false;
             }
+
+            return;
         }
 
         slider.addEventListener('mouseup', handleMouseUp);

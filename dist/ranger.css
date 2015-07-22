@@ -14,7 +14,7 @@
   height: 100vh;
   width: 100vw;
   margin: auto;
-  background-color: magenta;
+  background-color: #fff9d8;
 }
 .Showcase .Slider {
   -webkit-align-self: center;
@@ -100,7 +100,8 @@
 .Slider-indicator {
   position: absolute;
   top: 0;
-  -webkit-transform: translateX(50%);
-      -ms-transform: translateX(50%);
-          transform: translateX(50%);
+  left: 0;
+  -webkit-transform: translateX(80%);
+      -ms-transform: translateX(80%);
+          transform: translateX(80%);
 }
