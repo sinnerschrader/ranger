@@ -6,7 +6,7 @@ export function handleValue(min, max, percentage) {
 }
 
 export function setValueInDom(el, value) {
-    return el.innerHTML = value;
+    return el.textContent = value;
 }
 
 export function setAttributeInDom(el, attr, value) {

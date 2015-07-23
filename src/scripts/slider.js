@@ -16,22 +16,19 @@ export default function() {
     }
 
     let sliderList           = Array.prototype.slice.call(sliderNodeList);
-
     //-- Debounce helpers
-    let setDebouncedValue           = debounce(setValueInDom, 20);
+    let setDebouncedValue           = debounce(setValueInDom, 10);
     let setDebouncedAttr            = debounce(setAttributeInDom, 40);
 
     sliderList.forEach((slider, i, array) => {
-
         let inputEl           = slider.querySelector('.js-ranger-input');
         let trackEl           = slider.querySelector('.js-ranger-track');
         let distanceEl        = slider.querySelector('.js-ranger-distance');
         let valueEl           = slider.querySelector('.js-ranger-value');
         let indicatorEL       = slider.querySelector('.js-ranger-indicator');
 
-        //-- Ranger Settings
         let ranger = {
-            isActive: false,
+            isMoving: false,
             min: getMin(inputEl, 'data-min'),
             max: getMax(inputEl, 'data-max'),
             value: getValue(inputEl, 'value'),
@@ -41,105 +38,97 @@ export default function() {
             curretValue: 0
         }
 
-        //-- Initialize the slider
         let init = () => {
-
+            let initialPosition = setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
             if (indicatorEL !== null) {
                 setValueInDom(valueEl, ranger.value);
-                indicatorEL.style.left = setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
+                indicatorEL.style.left = initialPosition;
             }
 
-            distanceEl.style.width= setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
+            distanceEl.style.width= initialPosition;
         }
-
         init();
 
-        let handleMouseDown  = e => {
-
+        let onMouseDown  = e => {
             pauseEvent(e);
-            if (!slider.classList.contains ('is-active')) {
-                slider.classList.add ('is-active');
-            }
+            ranger.isMoving       = true;
 
-            //-- Calculates and sets the new position of the slider
+            requestAnimationFrame(update);
+
+            //-- Read only calculations responsible for the later
+            //-- positioning of the slider individual components.
             ranger.offset         = e.pageX - ranger.dimensions.left;
-            ranger.isActive       = true;
 
-            //-- Verify if the slider has steps
-            //-- and set the position accordingly
             if (!isNaN(ranger.steps)) {
-
                 ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
 
             } else {
-
                 ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
             }
 
-            distanceEl.style.width=  ranger.currentPosition + '%';
-
-            //-- Calculates and sets the value of the specific slider
-            ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
-            setAttributeInDom(inputEl, 'value', ranger.currentValue);
-
-            if (indicatorEL !== null) {
-                setValueInDom(valueEl, ranger.currentValue);
-                indicatorEL.style.left = ranger.currentPosition + '%';
-            }
+            ranger.currentValue    = handleValue(ranger.min, ranger.max, ranger.currentPosition);
         };
 
-        slider.addEventListener('mousedown', handleMouseDown);
-        slider.removeEventListener('mousedown', handleMouseDown, true);
 
-        let handleMouseMove = e => {
-            if (ranger.isActive) {
+        let onMouseMove = e => {
+            if (ranger.isMoving) {
                 pauseEvent(e);
 
-                //-- Calculates and sets the new position of the slider
+                requestAnimationFrame(update);
+
+                //-- Read only calculations responsible for the later
+                //-- positioning of the slider individual components.
                 ranger.offset         = e.pageX - ranger.dimensions.left;
 
                 if (!isNaN(ranger.steps)) {
-
                     ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
 
                 } else {
-
                     ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
                 }
-                distanceEl.style.width =  ranger.currentPosition + '%';
 
-                //-- Calculates and sets the value of the specific slider
                 ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
-                setDebouncedAttr(inputEl, 'value', ranger.currentValue);
+            }
+        }
 
-                if (indicatorEL !== null) {
-                    setDebouncedValue(valueEl, ranger.currentValue);
-                    indicatorEL.style.left = ranger.currentPosition + '%';
+        let onMouseUp = e => {
+            if (ranger.isMoving) {
+                ranger.isMoving = false;
+            }
+        }
+
+        //-- Write only function responsible for the updates of the
+        //-- slider components
+        let update = () => {
+            if (ranger.isMoving) {
+                requestAnimationFrame(update);
+
+                if (!slider.classList.contains ('is-moving')) {
+                    slider.classList.add ('is-moving');
+                }
+
+            } else {
+
+                if (slider.classList.contains('is-moving')) {
+                    slider.classList.remove('is-moving');
                 }
             }
 
-            return;
-        }
+            distanceEl.style.width =  ranger.currentPosition + '%';
+            setDebouncedAttr(inputEl, 'value', ranger.currentValue);
 
-        window.addEventListener('mousemove', debounce(handleMouseMove, 10));
-        window.removeEventListener('mousemove', handleMouseMove, true);
-
-        let handleMouseUp = e => {
-
-            if (ranger.isActive) {
-
-                if (slider.classList.contains('is-active')) {
-                    slider.classList.remove('is-active');
-                }
-
-                ranger.isActive = false;
+            if (indicatorEL !== null) {
+                setDebouncedValue(valueEl, ranger.currentValue);
+                indicatorEL.style.left = ranger.currentPosition + '%';
             }
-
-            return;
         }
 
-        slider.addEventListener('mouseup', handleMouseUp);
-        slider.removeEventListener('mouseup', handleMouseUp, true);
+        slider.addEventListener('mousedown', onMouseDown);
+        slider.removeEventListener('mousedown', onMouseDown, true);
+        window.addEventListener('mousemove', debounce(onMouseMove, 10));
+        window.removeEventListener('mousemove', onMouseMove, true);
+        slider.addEventListener('mouseup', onMouseUp);
+        slider.removeEventListener('mouseup', onMouseUp, true);
 
         console.log(ranger);
 

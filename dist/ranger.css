@@ -73,12 +73,12 @@
   transition: -webkit-transform 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
   transition: transform 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
 }
-.is-active .Slider-handle {
+.is-moving .Slider-handle {
   -webkit-transform: translateY(50%) scale(1.5);
       -ms-transform: translateY(50%) scale(1.5);
           transform: translateY(50%) scale(1.5);
 }
-.is-active .Slider-handle::before {
+.is-moving .Slider-handle::before {
   content: none;
 }
 .Slider-handle::before {
