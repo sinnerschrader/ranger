@@ -1,4 +1,4 @@
-import {getMin, getMax, getSteps, getValue, pauseEvent, debounce} from './utilities/utils';
+import {getNumber, pauseEvent, debounce} from './utilities/utils';
 import {handlePosition, handlePositionSteps, setInitialPosition} from './utilities/move';
 import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data';
 
@@ -15,10 +15,10 @@ export default function() {
         return;
     }
 
-    let sliderList           = Array.prototype.slice.call(sliderNodeList);
+    let sliderList            = Array.prototype.slice.call(sliderNodeList);
     //-- Debounce helpers
-    let setDebouncedValue           = debounce(setValueInDom, 10);
-    let setDebouncedAttr            = debounce(setAttributeInDom, 40);
+    let setDebouncedValue     = debounce(setValueInDom, 10);
+    let setDebouncedAttr      = debounce(setAttributeInDom, 40);
 
     sliderList.forEach((slider, i, array) => {
         let inputEl           = slider.querySelector('.js-ranger-input');
@@ -29,17 +29,20 @@ export default function() {
 
         let ranger = {
             isMoving: false,
-            min: getMin(inputEl, 'data-min'),
-            max: getMax(inputEl, 'data-max'),
-            value: getValue(inputEl, 'value'),
-            steps: getSteps(inputEl, 'data-step'),
-            dimensions: trackEl.getBoundingClientRect(),
+            min: getNumber(inputEl, 'data-min'),
+            max: getNumber(inputEl, 'data-max'),
+            value: getNumber(inputEl, 'value'),
+            steps: getNumber(inputEl, 'data-step'),
+            fractions: false,
+            curretValue: 0,
             offset: 0,
-            curretValue: 0
+            dimensions: trackEl.getBoundingClientRect()
         }
+
 
         let init = () => {
             let initialPosition = setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
+
             if (indicatorEL !== null) {
                 setValueInDom(valueEl, ranger.value);
                 indicatorEL.style.left = initialPosition;
