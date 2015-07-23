@@ -149,8 +149,6 @@ export default function() {
         slider.addEventListener('mouseup', onMouseUp);
         slider.removeEventListener('mouseup', onMouseUp, true);
 
-        console.log(ranger);
-
         return ranger;
     });
 }

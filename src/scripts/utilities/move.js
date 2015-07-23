@@ -1,6 +1,6 @@
 'use strict';
 
-export function setInitialPosition (min, max, initValue) {
+export let setInitialPosition = (min, max, initValue) => {
     let initial   = Number.isNaN(initValue) ? 0 : initValue;
     let range     = (max - min);
     let percent   = Math.round(((initial - min) * 100) / range);
@@ -8,7 +8,7 @@ export function setInitialPosition (min, max, initValue) {
     return percent;
 }
 
-export function handlePosition (offset, width) {
+export let handlePosition = (offset, width) => {
     let min      = 0;
     let max      = 100;
     let ratio    = Math.min(Math.max(offset / width, min), 1);
@@ -18,7 +18,7 @@ export function handlePosition (offset, width) {
     return percent;
  }
 
- export function handlePositionSteps (offset, width, min, max, stepWidth) {
+ export let handlePositionSteps = (offset, width, min, max, stepWidth) => {
      let ratio      = Math.min(Math.max(offset / width, 0), 1);
      let range      = (max - min);
      let currentStep= Math.round((ratio * range) / stepWidth);

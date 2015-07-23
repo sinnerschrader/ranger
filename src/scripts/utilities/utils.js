@@ -1,11 +1,11 @@
 'use strict';
 
-export function getNumber (node, value) {
+export let getNumber = (node, value) => {
     return parseInt(node.getAttribute(value), 10);
 }
 
 //-- Prevent text selection while dragging
-export function pauseEvent (e) {
+export let pauseEvent = (e) => {
     if (e.stopPropagation) {
          e.stopPropagation();
     }
@@ -19,7 +19,7 @@ export function pauseEvent (e) {
     return false;
 }
 
-export function stopPropagation (e) {
+export let stopPropagation = (e) => {
     if (e.stopPropagation) {
         e.stopPropagation();
     }
@@ -32,7 +32,7 @@ export function stopPropagation (e) {
 //-- leading edge, instead of the trailing.
 //-- http://davidwalsh.name/essential-javascript-functions?utm_source=javascriptweekly&utm_medium=email
 
-export function debounce (func, wait, immediate) {
+export let debounce = (func, wait, immediate) => {
 	let timeout;
 	return function () {
 
