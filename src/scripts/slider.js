@@ -33,22 +33,38 @@ export default function() {
             max: getNumber(inputEl, 'data-max'),
             value: getNumber(inputEl, 'value'),
             steps: getNumber(inputEl, 'data-step'),
-            fractions: false,
             curretValue: 0,
             offset: 0,
             dimensions: trackEl.getBoundingClientRect()
         }
 
-
         let init = () => {
             let initialPosition = setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
+
+            distanceEl.style.width= initialPosition;
 
             if (indicatorEL !== null) {
                 setValueInDom(valueEl, ranger.value);
                 indicatorEL.style.left = initialPosition;
             }
 
-            distanceEl.style.width= initialPosition;
+            //-- Set the steps fractions in DOM only if required
+            if (!isNaN(ranger.steps)) {
+                let sliderFractionsEl = document.createElement('div');
+                let fractionCount     = (ranger.max - ranger.min) / ranger.steps;
+                let fractionDistance  = (100 / fractionCount);
+                let i;
+
+                sliderFractionsEl.classList.add('Slider-fractions');
+                slider.appendChild(sliderFractionsEl);
+
+                for (i = fractionCount - 1; i >= 1; i--) {
+                    let fraction = document.createElement('span');
+
+                    fraction.style.left = (fractionDistance * i) + '%';
+                    sliderFractionsEl.appendChild(fraction);
+                }
+            }
         }
         init();
 
