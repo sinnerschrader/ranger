@@ -26,8 +26,10 @@
   position: relative;
   display: inline-block;
   height: 40px;
-  padding-top: 50px;
-  margin: 20px;
+  width: 30vw;
+  min-width: 150px;
+  padding-top: 60px;
+  margin: 20px 16px;
   line-height: 40px;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -39,9 +41,7 @@
   position: relative;
   z-index: 1;
   height: 4px;
-  width: 30vw;
-  min-width: 150px;
-  margin: 0 16px;
+  width: 100%;
   background-color: #ffedcb;
   cursor: pointer;
 }
@@ -101,7 +101,40 @@
   position: absolute;
   top: 0;
   left: 0;
-  -webkit-transform: translateX(80%);
-      -ms-transform: translateX(80%);
-          transform: translateX(80%);
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  line-height: 30px;
+  text-align: center;
+  color: #fff9d8;
+  background-color: #8f8d6a;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+.Slider-indicator::before {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  right: 43%;
+  z-index: -1;
+  height: 15px;
+  width: 15px;
+  border-radius: 2px;
+  background-color: #8f8d6a;
+  -webkit-transform: rotate(45deg) translateX(50%);
+      -ms-transform: rotate(45deg) translateX(50%);
+          transform: rotate(45deg) translateX(50%);
+}
+.Slider-steps {
+  position: relative;
+  height: 4px;
+  width: 100%;
+}
+.Slider-fraction {
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  height: 4px;
+  background-color: #8f8d6a;
 }

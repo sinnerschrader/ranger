@@ -12,24 +12,9 @@
     position: relative;
     z-index: 1;
     height: @trackHeight;
-    width: 30vw;
-    min-width: @minTrackWidth;
-    margin: 0 (@activeHandle / 2);
+    width: 100%;
     background-color: @trackHexBg;
     cursor: pointer;
-
-    // &:before {
-    //     content: "";
-    //     position: absolute;
-    //     top: 0;
-    //     left: 0;
-    //     height: (@trackHeight + 2);
-    //     width: 100%;
-    //     background: linear-gradient(to bottom, red, magenta);
-    //     background-position: 20% 0;
-    //     background-size: 4px 4px;
-    //     background-repeat: repeat-x;
-    // }
 
     &:hover {
         .Slider-handle {

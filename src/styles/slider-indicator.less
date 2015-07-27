@@ -1,6 +1,30 @@
+@indicatorSize: 30px;
+@indicatorHexColor: @showcaseHexBg;
+@indicatorHexBg: @fractionColor;
+
 .Slider-indicator {
     position: absolute;
     top: 0;
     left: 0;
-    transform: translateX(80%);
+    height: @indicatorSize;
+    width: @indicatorSize;
+    border-radius: 50%;
+    line-height: @indicatorSize;
+    text-align: center;
+    color: @indicatorHexColor;
+    background-color: @indicatorHexBg;
+    transform: translateX(-50%);
+
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        right: 43%;
+        z-index: -1;
+        height: (@indicatorSize / 2);
+        width: (@indicatorSize / 2);
+        border-radius: 2px;
+        background-color: @indicatorHexBg;
+        transform: rotate(45deg) translateX(50%);
+    }
 }

@@ -44,7 +44,6 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(5);
 	module.exports = __webpack_require__(6);
 
 
@@ -53,72 +52,7 @@
 /* 2 */,
 /* 3 */,
 /* 4 */,
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	/*globals window __webpack_hash__ */
-	if(false) {
-		var lastData;
-		var upToDate = function upToDate() {
-			return lastData.indexOf(__webpack_hash__) >= 0;
-		};
-		var check = function check() {
-			module.hot.check(true, function(err, updatedModules) {
-				if(err) {
-					if(module.hot.status() in {abort: 1, fail: 1}) {
-						console.warn("[HMR] Cannot apply update. Need to do a full reload!");
-						console.warn("[HMR] " + err.stack || err.message);
-						window.location.reload();
-					} else {
-						console.warn("[HMR] Update failed: " + err.stack || err.message);
-					}
-					return;
-				}
-
-				if(!updatedModules) {
-					console.warn("[HMR] Cannot find update. Need to do a full reload!");
-					console.warn("[HMR] (Probably because of restarting the webpack-dev-server)");
-					window.location.reload();
-					return;
-				}
-
-				if(!upToDate()) {
-					check();
-				}
-
-				require("./log-apply-result")(updatedModules, updatedModules);
-
-				if(upToDate()) {
-					console.log("[HMR] App is up to date.");
-				}
-
-			});
-		};
-		var addEventListener = window.addEventListener ? function(eventName, listener) {
-			window.addEventListener(eventName, listener, false);
-		} : function (eventName, listener) {
-			window.attachEvent("on" + eventName, listener);
-		};
-		addEventListener("message", function(event) {
-			if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
-				lastData = event.data;
-				if(!upToDate() && module.hot.status() === "idle") {
-					console.log("[HMR] Checking for updates on the server...");
-					check();
-				}
-			}
-		});
-		console.log("[HMR] Waiting for update signal from WDS...");
-	} else {
-		throw new Error("[HMR] Hot Module Replacement is disabled.");
-	}
-
-
-/***/ },
+/* 5 */,
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -180,7 +114,7 @@
 
 	    var sliderList = Array.prototype.slice.call(sliderNodeList);
 	    //-- Debounce helpers
-	    var setDebouncedValue = (0, _utilitiesUtils.debounce)(_utilitiesData.setValueInDom, 20);
+	    var setDebouncedValue = (0, _utilitiesUtils.debounce)(_utilitiesData.setValueInDom, 10);
 	    var setDebouncedAttr = (0, _utilitiesUtils.debounce)(_utilitiesData.setAttributeInDom, 40);
 
 	    sliderList.forEach(function (slider, i, array) {
@@ -190,53 +124,64 @@
 	        var valueEl = slider.querySelector('.js-ranger-value');
 	        var indicatorEL = slider.querySelector('.js-ranger-indicator');
 
-	        //-- Ranger Settings
 	        var ranger = {
 	            isMoving: false,
-	            min: (0, _utilitiesUtils.getMin)(inputEl, 'data-min'),
-	            max: (0, _utilitiesUtils.getMax)(inputEl, 'data-max'),
-	            value: (0, _utilitiesUtils.getValue)(inputEl, 'value'),
-	            steps: (0, _utilitiesUtils.getSteps)(inputEl, 'data-step'),
-	            dimensions: trackEl.getBoundingClientRect(),
+	            min: (0, _utilitiesUtils.getNumber)(inputEl, 'data-min'),
+	            max: (0, _utilitiesUtils.getNumber)(inputEl, 'data-max'),
+	            value: (0, _utilitiesUtils.getNumber)(inputEl, 'value'),
+	            steps: (0, _utilitiesUtils.getNumber)(inputEl, 'data-step'),
+	            curretValue: 0,
 	            offset: 0,
-	            curretValue: 0
+	            dimensions: trackEl.getBoundingClientRect()
 	        };
 
-	        //-- Initialize the slider
 	        var init = function init() {
-	            if (indicatorEL !== null) {
+	            var initialPosition = (0, _utilitiesMove.setInitialPosition)(ranger.min, ranger.max, ranger.value) + '%';
 
+	            distanceEl.style.width = initialPosition;
+
+	            if (indicatorEL !== null) {
 	                (0, _utilitiesData.setValueInDom)(valueEl, ranger.value);
-	                indicatorEL.style.left = (0, _utilitiesMove.setInitialPosition)(ranger.min, ranger.max, ranger.value) + '%';
+	                indicatorEL.style.left = initialPosition;
 	            }
 
-	            distanceEl.style.width = (0, _utilitiesMove.setInitialPosition)(ranger.min, ranger.max, ranger.value) + '%';
-	        };
+	            //-- Set the steps fractions in DOM only if required
+	            if (!isNaN(ranger.steps)) {
+	                var sliderFractionsEl = document.createElement('div');
+	                var fractionCount = (ranger.max - ranger.min) / ranger.steps;
+	                var fractionDistance = 100 / fractionCount;
+	                var _i = undefined;
 
+	                sliderFractionsEl.classList.add('Slider-steps');
+	                slider.appendChild(sliderFractionsEl);
+
+	                for (_i = fractionCount - 1; _i >= 1; _i--) {
+	                    var fraction = document.createElement('span');
+	                    fraction.classList.add('Slider-fraction');
+
+	                    fraction.style.left = fractionDistance * _i + '%';
+	                    sliderFractionsEl.appendChild(fraction);
+	                }
+	            }
+	        };
 	        init();
 
 	        var onMouseDown = function onMouseDown(e) {
 	            (0, _utilitiesUtils.pauseEvent)(e);
-
-	            requestAnimationFrame(update);
 	            ranger.isMoving = true;
 
-	            if (!slider.classList.contains('is-moving')) {
-	                slider.classList.add('is-moving');
-	            }
+	            requestAnimationFrame(update);
 
-	            //-- Calculates and sets the new position of the slider
+	            //-- Read only calculations responsible for the later
+	            //-- positioning of the slider individual components.
 	            ranger.offset = e.pageX - ranger.dimensions.left;
 
-	            //-- Verify if the slider has steps
-	            //-- and set the position accordingly
 	            if (!isNaN(ranger.steps)) {
 	                ranger.currentPosition = (0, _utilitiesMove.handlePositionSteps)(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
 	            } else {
 	                ranger.currentPosition = (0, _utilitiesMove.handlePosition)(ranger.offset, ranger.dimensions.width);
 	            }
 
-	            //-- Calculates and sets the value of the specific slider
 	            ranger.currentValue = (0, _utilitiesData.handleValue)(ranger.min, ranger.max, ranger.currentPosition);
 	        };
 
@@ -244,7 +189,10 @@
 	            if (ranger.isMoving) {
 	                (0, _utilitiesUtils.pauseEvent)(e);
 
-	                //-- Calculates and sets the new position of the slider
+	                requestAnimationFrame(update);
+
+	                //-- Read only calculations responsible for the later
+	                //-- positioning of the slider individual components.
 	                ranger.offset = e.pageX - ranger.dimensions.left;
 
 	                if (!isNaN(ranger.steps)) {
@@ -253,39 +201,37 @@
 	                    ranger.currentPosition = (0, _utilitiesMove.handlePosition)(ranger.offset, ranger.dimensions.width);
 	                }
 
-	                distanceEl.style.width = ranger.currentPosition + '%';
-
-	                //-- Calculates and sets the value of the specific slider
 	                ranger.currentValue = (0, _utilitiesData.handleValue)(ranger.min, ranger.max, ranger.currentPosition);
-	                setDebouncedAttr(inputEl, 'value', ranger.currentValue);
-
-	                if (indicatorEL !== null) {
-	                    setDebouncedValue(valueEl, ranger.currentValue);
-	                    indicatorEL.style.left = ranger.currentPosition + '%';
-	                }
 	            }
 	        };
 
 	        var onMouseUp = function onMouseUp(e) {
 	            if (ranger.isMoving) {
-	                if (slider.classList.contains('is-moving')) {
-	                    slider.classList.remove('is-moving');
-	                }
-
 	                ranger.isMoving = false;
 	            }
 	        };
 
+	        //-- Write only function responsible for the updates of the
+	        //-- slider components
 	        var update = function update() {
 	            if (ranger.isMoving) {
 	                requestAnimationFrame(update);
+
+	                if (!slider.classList.contains('is-moving')) {
+	                    slider.classList.add('is-moving');
+	                }
+	            } else {
+
+	                if (slider.classList.contains('is-moving')) {
+	                    slider.classList.remove('is-moving');
+	                }
 	            }
 
 	            distanceEl.style.width = ranger.currentPosition + '%';
-	            (0, _utilitiesData.setAttributeInDom)(inputEl, 'value', ranger.currentValue);
+	            setDebouncedAttr(inputEl, 'value', ranger.currentValue);
 
 	            if (indicatorEL !== null) {
-	                (0, _utilitiesData.setValueInDom)(valueEl, ranger.currentValue);
+	                setDebouncedValue(valueEl, ranger.currentValue);
 	                indicatorEL.style.left = ranger.currentPosition + '%';
 	            }
 	        };
@@ -297,159 +243,9 @@
 	        slider.addEventListener('mouseup', onMouseUp);
 	        slider.removeEventListener('mouseup', onMouseUp, true);
 
-	        console.log(ranger);
-
 	        return ranger;
 	    });
-	}
-
-	// import {getMin, getMax, getSteps, getValue, pauseEvent, debounce} from './utilities/utils';
-	// import {handlePosition, handlePositionSteps, setInitialPosition} from './utilities/move';
-	// import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data';
-	//
-	// export default function() {
-	//     let sliderNodeList      = document.getElementsByClassName('js-ranger');
-	//     let sliderInputNodeList = document.getElementsByClassName('js-ranger-input');
-	//     let sliderTrackNodeList = document.getElementsByClassName('js-ranger-track');
-	//
-	//     //-- Prevent the script to be excecuted if the required DOM
-	//     //-- Implementation is wrong
-	//     if (sliderNodeList.length <= 0
-	//         || sliderInputNodeList.length < sliderNodeList.length
-	//         || sliderTrackNodeList.length < sliderNodeList.length) {
-	//         return;
-	//     }
-	//
-	//     let sliderList           = Array.prototype.slice.call(sliderNodeList);
-	//     //-- Debounce helpers
-	//     let setDebouncedValue           = debounce(setValueInDom, 20);
-	//     let setDebouncedAttr            = debounce(setAttributeInDom, 40);
-	//
-	//     sliderList.forEach((slider, i, array) => {
-	//         let inputEl           = slider.querySelector('.js-ranger-input');
-	//         let trackEl           = slider.querySelector('.js-ranger-track');
-	//         let distanceEl        = slider.querySelector('.js-ranger-distance');
-	//         let valueEl           = slider.querySelector('.js-ranger-value');
-	//         let indicatorEL       = slider.querySelector('.js-ranger-indicator');
-	//
-	//         //-- Ranger Settings
-	//         let ranger = {
-	//             isMoving: false,
-	//             min: getMin(inputEl, 'data-min'),
-	//             max: getMax(inputEl, 'data-max'),
-	//             value: getValue(inputEl, 'value'),
-	//             steps: getSteps(inputEl, 'data-step'),
-	//             dimensions: trackEl.getBoundingClientRect(),
-	//             offset: 0,
-	//             curretValue: 0
-	//         }
-	//
-	//         //-- Initialize the slider
-	//         let init = () => {
-	//             if (indicatorEL !== null) {
-	//
-	//                 setValueInDom(valueEl, ranger.value);
-	//                 indicatorEL.style.left = setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
-	//             }
-	//
-	//             distanceEl.style.width= setInitialPosition(ranger.min, ranger.max, ranger.value)  + '%';
-	//         }
-	//
-	//         init();
-	//
-	//
-	//         let handleMouseDown  = e => {
-	//             pauseEvent(e);
-	//             if (!slider.classList.contains ('is-moving')) {
-	//                 slider.classList.add ('is-moving');
-	//             }
-	//
-	//             //-- Calculates and sets the new position of the slider
-	//             ranger.offset         = e.pageX - ranger.dimensions.left;
-	//             ranger.isMoving       = true;
-	//
-	//             //-- Verify if the slider has steps
-	//             //-- and set the position accordingly
-	//             if (!isNaN(ranger.steps)) {
-	//
-	//                 ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
-	//
-	//             } else {
-	//
-	//                 ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
-	//             }
-	//
-	//             distanceEl.style.width=  ranger.currentPosition + '%';
-	//
-	//             //-- Calculates and sets the value of the specific slider
-	//             ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
-	//             setAttributeInDom(inputEl, 'value', ranger.currentValue);
-	//
-	//             if (indicatorEL !== null) {
-	//                 setValueInDom(valueEl, ranger.currentValue);
-	//                 indicatorEL.style.left = ranger.currentPosition + '%';
-	//             }
-	//         };
-	//
-	//         slider.addEventListener('mousedown', handleMouseDown);
-	//         slider.removeEventListener('mousedown', handleMouseDown, true);
-	//
-	//         let handleMouseMove = e => {
-	//             if (ranger.isMoving) {
-	//                 pauseEvent(e);
-	//
-	//                 //-- Calculates and sets the new position of the slider
-	//                 ranger.offset         = e.pageX - ranger.dimensions.left;
-	//
-	//                 if (!isNaN(ranger.steps)) {
-	//
-	//                     ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
-	//
-	//                 } else {
-	//
-	//                     ranger.currentPosition= handlePosition(ranger.offset, ranger.dimensions.width);
-	//                 }
-	//
-	//                 distanceEl.style.width =  ranger.currentPosition + '%';
-	//
-	//                 //-- Calculates and sets the value of the specific slider
-	//                 ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
-	//                 setDebouncedAttr(inputEl, 'value', ranger.currentValue);
-	//
-	//                 if (indicatorEL !== null) {
-	//                     setDebouncedValue(valueEl, ranger.currentValue);
-	//                     indicatorEL.style.left = ranger.currentPosition + '%';
-	//                 }
-	//             }
-	//
-	//             return;
-	//         }
-	//
-	//         window.addEventListener('mousemove', debounce(handleMouseMove, 10));
-	//         window.removeEventListener('mousemove', handleMouseMove, true);
-	//
-	//         let handleMouseUp = e => {
-	//             if (ranger.isMoving) {
-	//
-	//                 if (slider.classList.contains('is-moving')) {
-	//                     slider.classList.remove('is-moving');
-	//                 }
-	//
-	//                 ranger.isMoving = false;
-	//             }
-	//
-	//             return;
-	//         }
-	//
-	//         slider.addEventListener('mouseup', handleMouseUp);
-	//         slider.removeEventListener('mouseup', handleMouseUp, true);
-	//
-	//         console.log(ranger);
-	//
-	//         return ranger;
-	//     });
-	// }
-	;
+	};
 
 	module.exports = exports['default'];
 
@@ -462,28 +258,13 @@
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
-	exports.getMin = getMin;
-	exports.getMax = getMax;
-	exports.getSteps = getSteps;
-	exports.getValue = getValue;
+	exports.getNumber = getNumber;
 	exports.pauseEvent = pauseEvent;
 	exports.stopPropagation = stopPropagation;
 	exports.debounce = debounce;
 
-	function getMin(node, minAttr) {
-	    return parseInt(node.getAttribute(minAttr), 10);
-	}
-
-	function getMax(node, maxAttr) {
-	    return parseInt(node.getAttribute(maxAttr), 10);
-	}
-
-	function getSteps(node, stepAttr) {
-	    return parseInt(node.getAttribute(stepAttr), 10);
-	}
-
-	function getValue(node, valAttr) {
-	    return parseInt(node.getAttribute(valAttr), 10);
+	function getNumber(node, value) {
+	    return parseInt(node.getAttribute(value), 10);
 	}
 
 	//-- Prevent text selection while dragging
@@ -556,8 +337,9 @@
 	exports.handlePositionSteps = handlePositionSteps;
 
 	function setInitialPosition(min, max, initValue) {
+	    var initial = Number.isNaN(initValue) ? 0 : initValue;
 	    var range = max - min;
-	    var percent = Math.round((initValue - min) * 100 / range);
+	    var percent = Math.round((initial - min) * 100 / range);
 
 	    return percent;
 	}
@@ -600,7 +382,7 @@
 	}
 
 	function setValueInDom(el, value) {
-	    return el.innerHTML = value;
+	    return el.textContent = value;
 	}
 
 	function setAttributeInDom(el, attr, value) {

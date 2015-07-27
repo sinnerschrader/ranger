@@ -6,8 +6,10 @@
     position: relative;
     display: inline-block;
     height: @sliderHeight;
-    padding-top: (@baseSpacing  * 2) + 10;
-    margin: @baseSpacing;
+    width: 30vw;
+    min-width: @minTrackWidth;
+    padding-top: (@baseSpacing  * 3);
+    margin: @baseSpacing (@activeHandle / 2);
     line-height: @sliderHeight;
     user-select: none;
 }

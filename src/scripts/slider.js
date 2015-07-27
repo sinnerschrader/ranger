@@ -55,11 +55,12 @@ export default function() {
                 let fractionDistance  = (100 / fractionCount);
                 let i;
 
-                sliderFractionsEl.classList.add('Slider-fractions');
+                sliderFractionsEl.classList.add('Slider-steps');
                 slider.appendChild(sliderFractionsEl);
 
                 for (i = fractionCount - 1; i >= 1; i--) {
                     let fraction = document.createElement('span');
+                    fraction.classList.add('Slider-fraction');
 
                     fraction.style.left = (fractionDistance * i) + '%';
                     sliderFractionsEl.appendChild(fraction);
