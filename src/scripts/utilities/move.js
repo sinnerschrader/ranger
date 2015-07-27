@@ -1,7 +1,7 @@
 'use strict';
 
 export function setInitialPosition (min, max, initValue) {
-    let initial   = Number.isNaN(initValue) ? 0 : initValue;
+    let initial   = isNaN(initValue) ? 0 : initValue;
     let range     = (max - min);
     let percent   = Math.round(((initial - min) * 100) / range);
 

@@ -337,7 +337,7 @@
 	exports.handlePositionSteps = handlePositionSteps;
 
 	function setInitialPosition(min, max, initValue) {
-	    var initial = Number.isNaN(initValue) ? 0 : initValue;
+	    var initial = isNaN(initValue) ? 0 : initValue;
 	    var range = max - min;
 	    var percent = Math.round((initial - min) * 100 / range);
 
