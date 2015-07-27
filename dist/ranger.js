@@ -262,6 +262,7 @@
 	exports.pauseEvent = pauseEvent;
 	exports.stopPropagation = stopPropagation;
 	exports.debounce = debounce;
+	exports.requestAnim = requestAnim;
 
 	function getNumber(node, value) {
 	    return parseInt(node.getAttribute(value), 10);
@@ -322,6 +323,34 @@
 	}
 
 	;
+
+	//-- requestAnimationFrame polyfill
+	//-- https://gist.github.com/paulirish/1579671
+
+	function requestAnim() {
+	    var lastTime = 0;
+	    var vendors = ['ms', 'moz', 'webkit', 'o'];
+	    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+	        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+	        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	    }
+
+	    if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
+	        var currTime = new Date().getTime();
+	        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	        var id = window.setTimeout(function () {
+	            callback(currTime + timeToCall);
+	        }, timeToCall);
+	        lastTime = currTime + timeToCall;
+	        return id;
+	    };
+
+	    if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
+	        clearTimeout(id);
+	    };
+	}
+
+	requestAnim();
 
 /***/ },
 /* 13 */

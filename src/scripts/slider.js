@@ -1,6 +1,7 @@
-import {getNumber, pauseEvent, debounce} from './utilities/utils';
+import {getNumber, pauseEvent, debounce, requestAnim} from './utilities/utils';
 import {handlePosition, handlePositionSteps, setInitialPosition} from './utilities/move';
 import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data';
+
 
 export default function() {
     let sliderNodeList      = document.getElementsByClassName('js-ranger');
