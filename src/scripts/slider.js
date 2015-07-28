@@ -33,8 +33,8 @@ export default function() {
             max: getNumber(inputEl, 'data-max'),
             value: getNumber(inputEl, 'value'),
             steps: getNumber(inputEl, 'data-step'),
-            curretValue: 0,
             offset: 0,
+            curretValue: 0,
             dimensions: trackEl.getBoundingClientRect()
         }
 
@@ -47,6 +47,7 @@ export default function() {
                 setValueInDom(valueEl, ranger.value);
                 indicatorEL.style.left = initialPosition;
             }
+
 
             //-- Set the steps fractions in DOM only if required
             if (!isNaN(ranger.steps)) {
@@ -66,6 +67,10 @@ export default function() {
                     sliderFractionsEl.appendChild(fraction);
                 }
             }
+
+            window.addEventListener('resize', () => {
+                ranger.dimensions = trackEl.getBoundingClientRect();
+            });
         }
         init();
 
@@ -105,6 +110,7 @@ export default function() {
                 }
 
                 ranger.currentValue   = handleValue(ranger.min, ranger.max, ranger.currentPosition);
+
             }
         }
 
@@ -115,6 +121,7 @@ export default function() {
                 update(null, false);
             }
         }
+
 
         //-- Write only function responsible for the updates of the
         //-- slider components
