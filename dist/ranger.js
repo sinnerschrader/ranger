@@ -44,7 +44,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(6);
+	__webpack_require__(6);
+	module.exports = __webpack_require__(7);
 
 
 /***/ },
@@ -56,6 +57,72 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	/*globals window __webpack_hash__ */
+	if(false) {
+		var lastData;
+		var upToDate = function upToDate() {
+			return lastData.indexOf(__webpack_hash__) >= 0;
+		};
+		var check = function check() {
+			module.hot.check(true, function(err, updatedModules) {
+				if(err) {
+					if(module.hot.status() in {abort: 1, fail: 1}) {
+						console.warn("[HMR] Cannot apply update. Need to do a full reload!");
+						console.warn("[HMR] " + err.stack || err.message);
+						window.location.reload();
+					} else {
+						console.warn("[HMR] Update failed: " + err.stack || err.message);
+					}
+					return;
+				}
+
+				if(!updatedModules) {
+					console.warn("[HMR] Cannot find update. Need to do a full reload!");
+					console.warn("[HMR] (Probably because of restarting the webpack-dev-server)");
+					window.location.reload();
+					return;
+				}
+
+				if(!upToDate()) {
+					check();
+				}
+
+				require("./log-apply-result")(updatedModules, updatedModules);
+
+				if(upToDate()) {
+					console.log("[HMR] App is up to date.");
+				}
+
+			});
+		};
+		var addEventListener = window.addEventListener ? function(eventName, listener) {
+			window.addEventListener(eventName, listener, false);
+		} : function (eventName, listener) {
+			window.attachEvent("on" + eventName, listener);
+		};
+		addEventListener("message", function(event) {
+			if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
+				lastData = event.data;
+				if(!upToDate() && module.hot.status() === "idle") {
+					console.log("[HMR] Checking for updates on the server...");
+					check();
+				}
+			}
+		});
+		console.log("[HMR] Waiting for update signal from WDS...");
+	} else {
+		throw new Error("[HMR] Hot Module Replacement is disabled.");
+	}
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -64,29 +131,29 @@
 	//-- On Build it is removed by the extract-text-webpack-plugin.
 	//-- So don't worry the css is removed from the deliverable ranger.js.
 
-	__webpack_require__(7);
+	__webpack_require__(8);
 
 	//-- The end of the css import
 
 	//-- Create Slider
 
-	var _slider = __webpack_require__(11);
+	var _slider = __webpack_require__(12);
 
 	var _slider2 = _interopRequireDefault(_slider);
 
 	var RANGER = (0, _slider2['default'])();
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 8 */,
 /* 9 */,
 /* 10 */,
-/* 11 */
+/* 11 */,
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -95,11 +162,11 @@
 	    value: true
 	});
 
-	var _utilitiesUtils = __webpack_require__(12);
+	var _utilitiesUtils = __webpack_require__(13);
 
-	var _utilitiesMove = __webpack_require__(13);
+	var _utilitiesMove = __webpack_require__(14);
 
-	var _utilitiesData = __webpack_require__(14);
+	var _utilitiesData = __webpack_require__(15);
 
 	exports['default'] = function () {
 	    var sliderNodeList = document.getElementsByClassName('js-ranger');
@@ -113,7 +180,6 @@
 	    }
 
 	    var sliderList = Array.prototype.slice.call(sliderNodeList);
-	    //-- Debounce helpers
 	    var setDebouncedValue = (0, _utilitiesUtils.debounce)(_utilitiesData.setValueInDom, 10);
 	    var setDebouncedAttr = (0, _utilitiesUtils.debounce)(_utilitiesData.setAttributeInDom, 40);
 
@@ -169,8 +235,7 @@
 	        var onMouseDown = function onMouseDown(e) {
 	            (0, _utilitiesUtils.pauseEvent)(e);
 	            ranger.isMoving = true;
-
-	            requestAnimationFrame(update);
+	            ranger.animationFrame = requestAnimationFrame(update);
 
 	            //-- Read only calculations responsible for the later
 	            //-- positioning of the slider individual components.
@@ -189,8 +254,6 @@
 	            if (ranger.isMoving) {
 	                (0, _utilitiesUtils.pauseEvent)(e);
 
-	                requestAnimationFrame(update);
-
 	                //-- Read only calculations responsible for the later
 	                //-- positioning of the slider individual components.
 	                ranger.offset = e.pageX - ranger.dimensions.left;
@@ -207,26 +270,22 @@
 
 	        var onMouseUp = function onMouseUp(e) {
 	            if (ranger.isMoving) {
+	                cancelAnimationFrame(ranger.animationFrame);
 	                ranger.isMoving = false;
+	                update(null, false);
 	            }
 	        };
 
 	        //-- Write only function responsible for the updates of the
 	        //-- slider components
-	        var update = function update() {
-	            if (ranger.isMoving) {
-	                requestAnimationFrame(update);
+	        var update = function update(timeStamp) {
+	            var loop = arguments[1] === undefined ? true : arguments[1];
 
-	                if (!slider.classList.contains('is-moving')) {
-	                    slider.classList.add('is-moving');
-	                }
-	            } else {
-
-	                if (slider.classList.contains('is-moving')) {
-	                    slider.classList.remove('is-moving');
-	                }
+	            if (loop) {
+	                ranger.animationFrame = requestAnimationFrame(update);
 	            }
 
+	            slider.classList.toggle('is-moving', ranger.isMoving);
 	            distanceEl.style.width = ranger.currentPosition + '%';
 	            setDebouncedAttr(inputEl, 'value', ranger.currentValue);
 
@@ -237,20 +296,15 @@
 	        };
 
 	        slider.addEventListener('mousedown', onMouseDown);
-	        slider.removeEventListener('mousedown', onMouseDown, true);
 	        window.addEventListener('mousemove', (0, _utilitiesUtils.debounce)(onMouseMove, 10));
-	        window.removeEventListener('mousemove', onMouseMove, true);
 	        slider.addEventListener('mouseup', onMouseUp);
-	        slider.removeEventListener('mouseup', onMouseUp, true);
-
-	        return ranger;
 	    });
 	};
 
 	module.exports = exports['default'];
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -353,7 +407,7 @@
 	requestAnim();
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -393,7 +447,7 @@
 	}
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -17,7 +17,6 @@ export default function() {
     }
 
     let sliderList            = Array.prototype.slice.call(sliderNodeList);
-    //-- Debounce helpers
     let setDebouncedValue     = debounce(setValueInDom, 10);
     let setDebouncedAttr      = debounce(setAttributeInDom, 40);
 
@@ -73,8 +72,7 @@ export default function() {
         let onMouseDown  = e => {
             pauseEvent(e);
             ranger.isMoving       = true;
-
-            requestAnimationFrame(update);
+            ranger.animationFrame = requestAnimationFrame(update);
 
             //-- Read only calculations responsible for the later
             //-- positioning of the slider individual components.
@@ -95,8 +93,6 @@ export default function() {
             if (ranger.isMoving) {
                 pauseEvent(e);
 
-                requestAnimationFrame(update);
-
                 //-- Read only calculations responsible for the later
                 //-- positioning of the slider individual components.
                 ranger.offset         = e.pageX - ranger.dimensions.left;
@@ -114,27 +110,20 @@ export default function() {
 
         let onMouseUp = e => {
             if (ranger.isMoving) {
+                cancelAnimationFrame(ranger.animationFrame);
                 ranger.isMoving = false;
+                update(null, false);
             }
         }
 
         //-- Write only function responsible for the updates of the
         //-- slider components
-        let update = () => {
-            if (ranger.isMoving) {
-                requestAnimationFrame(update);
-
-                if (!slider.classList.contains ('is-moving')) {
-                    slider.classList.add ('is-moving');
-                }
-
-            } else {
-
-                if (slider.classList.contains('is-moving')) {
-                    slider.classList.remove('is-moving');
-                }
+        let update = (timeStamp, loop = true) => {
+            if (loop) {
+                ranger.animationFrame = requestAnimationFrame(update);
             }
 
+            slider.classList.toggle('is-moving', ranger.isMoving);
             distanceEl.style.width =  ranger.currentPosition + '%';
             setDebouncedAttr(inputEl, 'value', ranger.currentValue);
 
@@ -145,12 +134,8 @@ export default function() {
         }
 
         slider.addEventListener('mousedown', onMouseDown);
-        slider.removeEventListener('mousedown', onMouseDown, true);
         window.addEventListener('mousemove', debounce(onMouseMove, 10));
-        window.removeEventListener('mousemove', onMouseMove, true);
         slider.addEventListener('mouseup', onMouseUp);
-        slider.removeEventListener('mouseup', onMouseUp, true);
 
-        return ranger;
     });
 }
