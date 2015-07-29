@@ -2,15 +2,16 @@
   "name": "rangerjs",
   "version": "1.0.0",
   "description": "Vanilla JS Range Slider",
-  "main": "src/scripts/index.js",
+  "main": "dist/ranger.js",
   "scripts": {
     "start": "webpack && npm run dev",
     "dev": "webpack-dev-server --devtool eval --hot --progress",
     "production": "webpack -p"
   },
   "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>",
-  "repository": "git@git.sinnerschrader.com:frontend/rangerjs.git",
-  "dependencies": {
+  "repository": "https://github.com/Palmaswell/ranger.git",
+  "license": "MIT",
+  "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
     "babel-core": "^5.6.15",
     "babel-loader": "^5.2.2",
