@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Vanilla JS Range Slider",
   "main": "src/scripts/index.js",
+  "style": "dist/ranger.css",
   "scripts": {
     "start": "webpack && npm run dev",
     "dev": "webpack-dev-server --devtool eval --hot --progress",
