@@ -28,7 +28,7 @@
   height: 40px;
   width: 30vw;
   min-width: 150px;
-  padding-top: 60px;
+  padding-top: 65px;
   margin: 20px 16px;
   line-height: 40px;
   -webkit-user-select: none;
@@ -101,13 +101,11 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  line-height: 30px;
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
   text-align: center;
   color: #fff9d8;
-  background-color: #8f8d6a;
   -webkit-transform: translateX(-50%);
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
@@ -115,16 +113,16 @@
 .Slider-indicator::before {
   content: "";
   position: absolute;
-  bottom: 2px;
+  bottom: 0;
   right: 43%;
   z-index: -1;
-  height: 15px;
-  width: 15px;
-  border-radius: 2px;
+  height: inherit;
+  width: inherit;
+  border-radius: 50%;
   background-color: #8f8d6a;
-  -webkit-transform: rotate(45deg) translateX(50%);
-      -ms-transform: rotate(45deg) translateX(50%);
-          transform: rotate(45deg) translateX(50%);
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
 }
 .Slider-steps {
   position: relative;

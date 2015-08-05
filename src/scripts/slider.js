@@ -138,6 +138,6 @@ export default function () {
 
     slider.addEventListener('mousedown', onMouseDown)
     window.addEventListener('mousemove', debounce(onMouseMove, 10))
-    slider.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('mouseup', onMouseUp)
   })
 }
