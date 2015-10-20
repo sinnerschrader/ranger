@@ -1,5 +1,5 @@
 {
-  "name": "Ranger",
+  "name": "ranger",
   "version": "1.1.0",
   "description": "Vanilla JS Range Slider",
   "style": "dist/ranger.css",
