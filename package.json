@@ -5,6 +5,7 @@
   "style": "dist/ranger.css",
   "main": "dist/ranger.js",
   "scripts": {
+    "less": "babel-node tasks/configuration/less.js",
     "start": "webpack && npm run dev",
     "dev": "webpack-dev-server --devtool eval --hot --progress",
     "production": "webpack -p"
@@ -21,17 +22,14 @@
     "eslint-config-standard": "^4.0.0",
     "eslint-plugin-standard": "^1.2.0",
     "extract-text-webpack-plugin": "^0.8.2",
-    "file-loader": "^0.8.4",
     "html-loader": "^0.3.0",
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
-    "node-libs-browser": "^0.5.2",
-    "style-loader": "^0.12.3",
-    "url-loader": "^0.5.6",
-    "webpack": "^1.10.1",
-    "webpack-dev-server": "^1.10.1"
+    "node-libs-browser": "^0.5.2"
   },
   "dependencies": {
-    "debounce": "^1.0.0"
+    "babel": "^5.8.23",
+    "debounce": "^1.0.0",
+    "less": "^2.5.3"
   }
 }
