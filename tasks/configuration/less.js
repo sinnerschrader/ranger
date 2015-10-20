@@ -3,7 +3,7 @@ import fs from 'fs'
 import less from 'less'
 import autoprefixer from 'autoprefixer'
 
-export default function compileLess (options, callback) {
+export default (function compileLess (options, callback) {
   let env = process.env.NODE_ENV || 'development'
   let lessFile = path.resolve('./src/styles/index.less')
   let cssFile = path.resolve('./dist/ranger.css')
@@ -29,6 +29,4 @@ export default function compileLess (options, callback) {
     })
 
   })
-};
-
-compileLess();
+})()

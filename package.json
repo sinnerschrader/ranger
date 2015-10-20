@@ -1,35 +1,36 @@
 {
-  "name": "rangerjs",
-  "version": "1.0.0",
+  "name": "Ranger",
+  "version": "1.1.0",
   "description": "Vanilla JS Range Slider",
   "style": "dist/ranger.css",
   "main": "dist/ranger.js",
+  "jsnext:main": "dist/ranger.js",
   "scripts": {
+    "start": "npm run clean && npm run less && npm run bundle && npm run babel",
+    "clean": "rm -rf ./dist/ranger-es6.js ./dist/ranger-es6.js.map ./dist/ranger.js ./dist/ranger.css",
     "less": "babel-node tasks/configuration/less.js",
-    "start": "webpack && npm run dev",
-    "dev": "webpack-dev-server --devtool eval --hot --progress",
-    "production": "webpack -p"
+    "bundle": "babel-node tasks/configuration/bundle.js",
+    "babel": "babel-node tasks/configuration/babel.js"
   },
   "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>",
+  "contributors": [
+   {
+     "name": "Mauricio Palma",
+     "email": "mauricio.palma@sinnerschrader.com"
+   }
+ ],
   "repository": "https://github.com/Palmaswell/ranger.git",
   "license": "MIT",
   "devDependencies": {
-    "autoprefixer-loader": "^2.0.0",
-    "babel-core": "^5.6.15",
-    "babel-loader": "^5.2.2",
-    "css-loader": "^0.15.1",
+    "autoprefixer": "^2.0.0",
+    "babel-core": "^5.8.25",
     "eslint": "^1.0.0",
     "eslint-config-standard": "^4.0.0",
-    "eslint-plugin-standard": "^1.2.0",
-    "extract-text-webpack-plugin": "^0.8.2",
-    "html-loader": "^0.3.0",
-    "less": "^2.5.1",
-    "less-loader": "^2.2.0",
-    "node-libs-browser": "^0.5.2"
+    "eslint-plugin-standard": "^1.2.0"
   },
   "dependencies": {
     "babel": "^5.8.23",
-    "debounce": "^1.0.0",
-    "less": "^2.5.3"
+    "less": "^2.5.3",
+    "rollup": "^0.19.1"
   }
 }

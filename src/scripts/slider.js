@@ -1,5 +1,4 @@
-import debounce from 'debounce'
-import {getNumber, pauseEvent} from './utilities/utils'
+import {getNumber, pauseEvent, debounce} from './utilities/utils'
 import {handlePosition, handlePositionSteps, setInitialPosition} from './utilities/move'
 import {handleValue, setValueInDom, setAttributeInDom} from './utilities/data'
 
