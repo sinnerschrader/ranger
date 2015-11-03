@@ -3,7 +3,3 @@ examples/
 .git
 npm-debug.log
 .DS_Store
-/dist/ranger-es6.js
-/dist/ranger-es6.js.map
-/dist/ranger.js
-/dist/ranger.css
