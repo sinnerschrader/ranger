@@ -214,6 +214,40 @@
         }
       };
 
+      var onTouchstart = function onTouchstart(e) {
+        eventHandler(ranger, pauseEvent, e, true, update);
+
+        if (!isNaN(ranger.steps)) {
+          ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
+        } else {
+          ranger.currentPosition = handlePosition(ranger.offset, ranger.dimensions.width);
+        }
+
+        ranger.currentValue = handleValue(ranger.min, ranger.max, ranger.currentPosition);
+      };
+
+      var onTouchmove = function onTouchmove(e) {
+        if (ranger.isMoving) {
+          eventHandler(ranger, pauseEvent, e, true, update);
+
+          if (!isNaN(ranger.steps)) {
+            ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps);
+          } else {
+            ranger.currentPosition = handlePosition(ranger.offset, ranger.dimensions.width);
+          }
+
+          ranger.currentValue = handleValue(ranger.min, ranger.max, ranger.currentPosition);
+        }
+      };
+
+      var onTouchend = function onTouchend(e) {
+        if (ranger.isMoving) {
+          window.cancelAnimationFrame(ranger.animationFrame);
+          ranger.isMoving = false;
+          update(null, false);
+        }
+      };
+
       // -- Write only function responsible for the updates of the
       // -- slider components
       var update = function update(timeStamp) {
@@ -236,6 +270,12 @@
       slider.addEventListener('mousedown', onMouseDown);
       window.addEventListener('mousemove', debounce(onMouseMove, 10));
       window.addEventListener('mouseup', onMouseUp);
+
+      if ('ontouchstart' in window) {
+        slider.addEventListener('touchstart', onTouchstart);
+        slider.addEventListener('touchmove', onTouchmove);
+        slider.addEventListener('touchend', onTouchend);
+      }
     });
   }
 
