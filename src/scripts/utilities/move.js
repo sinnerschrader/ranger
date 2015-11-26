@@ -21,3 +21,10 @@ export function handlePositionSteps (offset, width, min, max, stepWidth) {
   let percent = ((currentStep * stepWidth) / range) * 100
   return percent
 }
+
+export function eventHandler (obj, fn, event, flag = true, update) {
+  fn(event)
+  obj.isMoving = flag
+  obj.animationFrame = window.requestAnimationFrame(update)
+  obj.offset = event.pageX - obj.dimensions.left
+}

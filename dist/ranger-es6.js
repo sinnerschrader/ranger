@@ -84,6 +84,13 @@
     return percent
   }
 
+  function eventHandler (obj, fn, event, flag = true, update) {
+    fn(event)
+    obj.isMoving = flag
+    obj.animationFrame = window.requestAnimationFrame(update)
+    obj.offset = event.pageX - obj.dimensions.left
+  }
+
   function handleValue (min, max, percentage) {
     let maxRange = max - min
     return Math.round(((percentage * maxRange) / 100) + min)
@@ -170,13 +177,7 @@
       init()
 
       let onMouseDown = e => {
-        pauseEvent(e)
-        ranger.isMoving = true
-        ranger.animationFrame = window.requestAnimationFrame(update)
-
-        // -- Read only calculations responsible for the later
-        // -- positioning of the slider individual components.
-        ranger.offset = e.pageX - ranger.dimensions.left
+        eventHandler(ranger, pauseEvent, e, true, update)
 
         if (!isNaN(ranger.steps)) {
           ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps)
@@ -189,11 +190,7 @@
 
       let onMouseMove = e => {
         if (ranger.isMoving) {
-          pauseEvent(e)
-
-          // -- Read only calculations responsible for the later
-          // -- positioning of the slider individual components.
-          ranger.offset = e.pageX - ranger.dimensions.left
+          eventHandler(ranger, pauseEvent, e, true, update)
 
           if (!isNaN(ranger.steps)) {
             ranger.currentPosition = handlePositionSteps(ranger.offset, ranger.dimensions.width, ranger.min, ranger.max, ranger.steps)
@@ -233,6 +230,7 @@
       slider.addEventListener('mousedown', onMouseDown)
       window.addEventListener('mousemove', debounce(onMouseMove, 10))
       window.addEventListener('mouseup', onMouseUp)
+
     })
   }
 
