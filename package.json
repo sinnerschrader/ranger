@@ -19,6 +19,13 @@
      "email": "mauricio.palma@sinnerschrader.com"
    }
  ],
+ "keywords": [
+   "Range Slider",
+   "Slider",
+   "Range",
+   "Vanilla JS",
+   "ES6"
+ ],
   "repository": "https://github.com/Palmaswell/ranger.git",
   "license": "MIT",
   "devDependencies": {
