@@ -1,5 +1,7 @@
 # Ranger
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/sinnerschrader/ranger.svg)](https://greenkeeper.io/)
+
 Lightweight and customizable vanilla JS range slider.
 
 ## Dependencies
