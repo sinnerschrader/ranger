@@ -29,15 +29,15 @@
   "repository": "https://github.com/Palmaswell/ranger.git",
   "license": "MIT",
   "devDependencies": {
-    "autoprefixer": "^2.0.0",
-    "babel-core": "^5.8.25",
-    "eslint": "^1.0.0",
-    "eslint-config-standard": "^4.0.0",
-    "eslint-plugin-standard": "^1.2.0"
+    "autoprefixer": "^6.7.6",
+    "babel-core": "^6.23.1",
+    "eslint": "^3.17.0",
+    "eslint-config-standard": "^7.0.0",
+    "eslint-plugin-standard": "^2.1.1"
   },
   "dependencies": {
-    "babel": "^5.8.23",
+    "babel": "^6.23.0",
     "less": "^2.5.3",
-    "rollup": "^0.19.1"
+    "rollup": "^0.41.4"
   }
 }
